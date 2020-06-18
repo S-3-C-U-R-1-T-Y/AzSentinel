@@ -1,0 +1,6 @@
+// Show Azure AD IMAP4 (legacy auth) logon succesfully outside of the Netherlands
+SigninLogs
+| where ClientAppUsed contains "IMAP" and Location != "NL" and ResultType == "0"
+| project Identity, ClientAppUsed, Location, IPAddress
+| summarize IPs = dcount(IPAddress), Locations = make_set(Location) by Identity
+| sort by IPs desc
