@@ -1,0 +1,7 @@
+// User did not pass MFA challenge from > 1 IP-address(es)
+SigninLogs
+| where ResultType == "50074" and LocationDetails.geoCoordinates != "{}"
+| project Identity, Location, IPAddress
+| summarize IPs = dcount(IPAddress), Locations = make_set(Location) by Identity
+| where IPs > 1
+| sort by IPs desc 
