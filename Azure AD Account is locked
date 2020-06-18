@@ -1,0 +1,7 @@
+// Show Azure AD account locked attempts if the # of IP's is > 1
+SigninLogs
+| where ResultType == "50053" // Account is locked 
+| project Identity, Location, IPAddress
+| summarize IPs = dcount(IPAddress), Locations = make_set(Location) by Identity
+| where IPs > 1
+| sort by IPs desc
